@@ -4,7 +4,8 @@ Date: 24/01/2023
 Desc: Snake Water Gun game with zero runtime error and no unexpected behaviour 
 """
 import random
-
+swg = ['snake', 'water', 'gun']
+states = ['Draw :! \n', 'You Win :) \n', 'You Lose :( \n']
 
 def winner(player, computer):
   '''Returns 0 for draw 1 for win -1 for lose'''
@@ -15,33 +16,47 @@ def winner(player, computer):
   ]
   return winning_matrix[computer][player]
 
-score = []
-swg = ['snake', 'water', 'gun']
-states = ['Draw :! \n', 'You Win :) \n', 'You Lose :( \n']
+def handle_input():
+    """Handles input validation and returns the choice of user"""
+    while True:
+        user = input("select one snake, water or gun [0/1/2]: ")
+        if user in ['0', '1', '2']:
+            return int(user)
+        print("Invalid Input, please enter a valid choice.")
 
-while True:
-  # for i in range(3-len(score)):
-  while len(score) < 3:
-    # handeles valueerror (if user press enter instead of any number)
-    user = input("select one snake, water or gun [0/1/2]: ")
+def play_game():
+    """Plays one round of the game and returns the result (0 for draw, 1 for win, -1 for lose)"""
+    user = handle_input()
     comp = random.choice([0, 1, 2])
-
-    # handels if user provide wrong input or no input
-    if not user in ['0', '1', '2']: continue
-    
-    user = int(user)
     print(f"you selected {swg[user]} and computer selected {swg[comp]}")
-    print(states[winner(user, comp)])
-    score.append(winner(user, comp))
-    print(len(score))
-  
-  if sum(score) > 0:
-    print("You won the best of three :) Hope you enjoyed\n")
-  elif sum(score) < 0:
-    print("You lose the best of three :( Better luck next time\n")
-  else:
-    print("There is a draw between you and computer :!\nseems like you got the computer's vision\nor computer can read your mind \n")
-  score = []
-  prompt = input("press any key to continue or [0] to exit: ")
-  if prompt == '0':break
-  
+    result = winner(user, comp)
+    print(states[result])
+    return result
+
+def display_result(score):
+    """Displays the result of the game based on the score"""
+    if score > 0:
+        print("You won the best of three :) Hope you enjoyed\n")
+    elif score < 0:
+        print("You lose the best of three :( Better luck next time\n")
+    else:
+        print("There is a draw between you and computer :!\nseems like you got the computer's vision\nor computer can read your mind \n")
+
+def main():
+    """Main function of the game"""
+    score = 0
+
+    # Play the game for 3 rounds
+    for i in range(3):
+        score += play_game()
+
+    # Display the final result
+    display_result(score)
+
+
+if __name__ == '__main__':
+    while True:
+      main()
+      
+      prompt = input("Press any key to continue or [0] to exit: ")
+      if prompt == '0': break
